@@ -39,6 +39,7 @@ def addtrain(updatefile):
 def test(productid):
     model = Word2Vec.load('word2vec.model')
     # for i in range(5):
+
     print(str(productid)+"-->"+str(model.wv.most_similar([str(productid)])))
         # , sentences[i][2], sentences[i][3], sentences[i][4]]
 
