@@ -9,9 +9,7 @@ def train(file):
     print(len(load_dict[0]))
 
     sentences = []
-    # sentences = [["i","love","haha","tree"],["i","love","tree","haha"],["love","flawer","hoho"],["you","love","flawer","hoho"]]
     for i in range(len(load_dict[0])):
-    # for i in range(5):
         print(load_dict[0][str(i)])
         sentences.append(load_dict[0][str(i)])
 
@@ -26,7 +24,6 @@ def addtrain(updatefile):
 
     sentences = []
     for i in range(len(load_dict[0])):
-        # print(load_dict[0][str(i)])
         sentences.append(load_dict[0][str(i)])
 
     model = Word2Vec.load('word2vec.model')
