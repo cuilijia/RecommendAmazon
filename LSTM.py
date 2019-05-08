@@ -35,10 +35,10 @@ def getdata(file):
         for i in range(len(load_dict[0])):
             # xtrainsent.append(load_dict[0][str(i)][0:8])
             # ytrainsent.append(load_dict[0][str(i)][8:10])
-            xlist = load_dict[0][str(i)][0:9]
+            xlist = load_dict[0][str(i)][0:8]
             Xlist = [int(i) for i in xlist]
             xtrainsent.append(Xlist)
-            ylist = load_dict[0][str(i)][9:10]
+            ylist = load_dict[0][str(i)][8:10]
             Ylist = [int(i) for i in ylist]
             ytrainsent.append(Ylist)
 
@@ -60,6 +60,8 @@ def train(xtrainsent,ytrainsent):
     model = tf.keras.models.Sequential()
     model.add(tf.keras.layers.LSTM(32, input_shape=(xtrainsent.shape[1], xtrainsent.shape[2])))
     model.add(tf.keras.layers.Dense(ytrainsent.shape[1], activation='softmax'))
+    # model.add(tf.keras.layers.LSTM(32, input_shape=(xtrainsent.shape[1], xtrainsent.shape[2])))
+    # model.add(tf.keras.layers.Dense(ytrainsent.shape[1], activation='softmax'))
     # model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
     model.fit(xtrainsent, ytrainsent, epochs=10, batch_size=32, verbose=2)
@@ -67,14 +69,16 @@ def train(xtrainsent,ytrainsent):
 
     # next_index = sample(preds=preds, temperatue=temperature)
     # next_char = char[next_index]
+    print(model.summary())
     return model
 
 def test(model):
-    testx = [["10734", "4320", "7556", "10694", "9153", "1259", "15893", "8780", "4436"]]
+    testx = [["10734", "4320", "7556", "10694", "9153", "1259", "15893", "8780"]]
     testx = np.array(testx)
     testx = testx.reshape((testx.shape[0], 1, testx.shape[1]))
 
     # testPredict = model.predict(testx)
+    print(len(model.predict(testx, verbose=0)))
     preds = model.predict(testx, verbose=0)[0]
     print(preds)
     print(max(preds))

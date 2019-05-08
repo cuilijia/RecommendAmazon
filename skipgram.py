@@ -6,14 +6,17 @@ from matplotlib import pyplot
 import requests
 import json
 
-def getItemsInfo(id):
+from matplotlib import pyplot as plt
+
+def getItemsInfo(id,saveplace):
 
     itemIndex = int(id)
     params = {"index": itemIndex}
-    r = requests.get('http://34.80.151.46:10086/getItemInfo', params=params)
+    # r = requests.get('http://34.80.151.46:10086/getItemInfo', params=params)
+    r = requests.get('http://35.221.224.66:10086/getItemInfo', params=params)
     iteminfo=r.json()
     print(iteminfo['title'])
-    request_download(str(id), iteminfo['imUrl'])
+    request_download(str(id), iteminfo['imUrl'],saveplace)
     return iteminfo['title']
 
 
@@ -24,7 +27,8 @@ def performance(input, output):
     for i in input:
         itemIndex = int(i)
         params = {"index": itemIndex}
-        r = requests.get('http://34.80.151.46:10086/getAllRelated', params=params)
+        # r = requests.get('http://34.80.151.46:10086/getAllRelated', params=params)
+        r = requests.get('http://35.221.224.66:10086/getItemInfo', params=params)
         for j in r.json():
             list1.append(j)
     list2 = []
@@ -91,11 +95,12 @@ def drawpic(size):
     pyplot.show()
 
 def countpre():
-    with open('data/data4.json','r') as load_f:
+    with open('data/data9.json','r') as load_f:
         load_dict = json.load(load_f)
     print(len(load_dict[0]))
 
     sentences = []
+    array=[0]*11
     for i in range(len(load_dict[0])):
         # print(load_dict[0][str(i)][:9])
         # sentences.append(load_dict[0][str(i)][:9])
@@ -104,20 +109,22 @@ def countpre():
         count = performance(input, output)
         # print(count)
         print(i)
+
+        array[int(count*10)]+=1
+
         sentences.append(count)
 
-        if (i%100)==0:
-            print(max(sentences))
+        if (i%10)==0:
+            # print(sentences)
+            print(array)
 
-def request_download(id,url):
+def request_download(id,url,saveplace):
     import requests
     r = requests.get(url)
-    with open('img/img'+id+'.png', 'wb') as f:
+    with open(saveplace+'/img'+id+'.png', 'wb') as f:
         f.write(r.content)
 
-# getItemsInfo(11550)
-# drawpic(0)
-# 输入是画的size，为0是全部输出
+
 
 # train("data/data1.json",Sg=0,Size=250,Window=5,Min_count=1,Workers=4,Iter=10)
 # for i in range(2,11):
@@ -129,18 +136,25 @@ def seachinfolist(input,output):
         outputx.append(o[0])
 
     for it in input:
-        getItemsInfo(it)
+        getItemsInfo(it,'img')
 
     print('output:')
 
     for it in outputx:
-        getItemsInfo(it)
+        getItemsInfo(it,'imgoutput')
 
 
-input,output =test(["10929", "10556", "13271", "13359", "17527", "154", "8782", "12977"])
-print(input)
-print(output)
-seachinfolist(input,output)
-
+# input,output =test(["10929", "10556", "13271", "13359", "17527", "154", "8782", "12977"])
+# print(input)
+# print(output)
+# seachinfolist(input,output)
+#
 # count=performance(input, output)
 # print(count)
+
+countpre()
+
+
+# getItemsInfo(11550)
+# drawpic(800)
+# 输入是画的size，为0是全部输出
